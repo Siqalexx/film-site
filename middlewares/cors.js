@@ -1,8 +1,8 @@
 const allowedCors = [
-  'http://ivanov-social.nomoredomains.work',
-  'http://api.ivanov-social.nomoredomains.work',
-  'https://ivanov-social.nomoredomains.work',
-  'https://api.ivanov-social.nomoredomains.work',
+  'http://project-movie.nomoredomains.work',
+  'http://api.project-movie.nomoredomains.work',
+  'https://project-movie.nomoredomains.work',
+  'https://api.project-movie.nomoredomains.work',
   'localhost:3000',
 ];
 const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
