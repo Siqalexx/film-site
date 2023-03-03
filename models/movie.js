@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { validationAvatar } = require('../utils/validationAvatar');
 
 const movieSchema = mongoose.Schema({
   country: {
@@ -24,14 +25,17 @@ const movieSchema = mongoose.Schema({
   image: {
     type: String,
     required: true,
+    validate: validationAvatar,
   },
   trailerLink: {
     type: String,
     required: true,
+    validate: validationAvatar,
   },
   thumbnail: {
     type: String,
     required: true,
+    validate: validationAvatar,
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,

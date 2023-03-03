@@ -31,7 +31,7 @@ const changeUser = (req, res, next) => {
       {
         new: true,
         runValidators: true,
-      }
+      },
     )
     .then((user) => {
       if (!user) {
@@ -66,14 +66,14 @@ const login = (req, res, next) => {
             process.env.NODE_ENV === 'production' ? PRIVATE_KEY : 'dev-secret',
             {
               expiresIn: '7d',
-            }
+            },
           );
           res
             .cookie('jwt', token, {
               maxAge: 3600000,
               httpOnly: true,
               // secure: true,
-              // sameSite: 'None', // мне кажется это очень странное решение, и оно может стать уязвимостью сайта
+              // sameSite: 'None',
             })
             .send({ message: 'cookie is download' });
         })
