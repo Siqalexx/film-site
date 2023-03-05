@@ -12,7 +12,7 @@ const PRIVATE_KEY = process.env.JWT_SECRET;
 
 const getUser = (req, res, next) => {
   userModel
-    .findOne({})
+    .findOne({ _id: req.user.id })
     .then((users) => {
       res.send(users);
     })
@@ -42,6 +42,9 @@ const changeUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return next(new ValidationError(err.message));
+      }
+      if (err.code === 11000) {
+        return next(new Conflict(err.message));
       }
       return next(err);
     });

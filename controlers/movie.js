@@ -6,7 +6,7 @@ const { movieModel } = require('../models/movie');
 
 const getMovies = (req, res, next) => {
   movieModel
-    .find({})
+    .find({ owner: req.user.id })
     .populate('owner')
     .then((movie) => {
       res.send(movie);

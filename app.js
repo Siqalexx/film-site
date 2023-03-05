@@ -10,10 +10,15 @@ const movieRouter = require('./routes/movie');
 const { auth } = require('./middlewares/auth');
 const { cors } = require('./middlewares/cors');
 const NotFound = require('./error/NotFound');
-const { login, registration } = require('./controlers/user');
+const { login, registration, logout } = require('./controlers/user');
 const { signInCelebrate, signUpCelebrate } = require('./utils/celebrate');
+const { centralHendler } = require('./utils/centralHandler');
 
-mongoose.connect('mongodb://localhost:27017/bitfilmsdb'); // так как url локальный, смысла прятать нет
+mongoose.connect(
+  process.env.NODE_ENV === 'production'
+    ? process.env.MONGO_URL
+    : 'mongodb://localhost:27017/bitfilmsdb'
+);
 
 const app = express();
 
@@ -26,31 +31,23 @@ app.post('/signin', signInCelebrate(), login);
 
 app.post('/signup', signUpCelebrate(), registration);
 
+app.get('/signout', logout);
+
 app.use('/users', auth, userRouter);
 
 app.use('/movies', auth, movieRouter);
-
-app.use(errorLogger);
 
 app.use((req, res, next) => {
   next(new NotFound('Неправильный адрес'));
 });
 
+app.use(errorLogger);
+
 app.use(errors());
 
-app.use((err, req, res, next) => {
-  const { message, status = 500 } = err;
-  if (status !== 500) {
-    res.status(status).send({
-      message,
-    });
-  } else {
-    console.log(message);
-    res.status(status).send({
-      message: 'Ошибка сервера',
-    });
-  }
-  next();
-});
+app.use(centralHendler);
 
-app.listen(process.env.PORT, () => console.log('Сервер запущен'));
+app.listen(
+  process.env.NODE_ENV === 'production' ? process.env.PORT : 3000,
+  () => console.log('Сервер запущен')
+);

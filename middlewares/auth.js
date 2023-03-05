@@ -7,7 +7,10 @@ const auth = (req, res, next) => {
     return next(new LoginError('Необходима авторизация'));
   }
   try {
-    const payload = jsonwebtoken.verify(jwt, process.env.JWT_SECRET);
+    const payload = jsonwebtoken.verify(
+      jwt,
+      process.env.NODE_ENV === 'production' ? process.env.JWT_SECRET : 'testkey',
+    );
     req.user = payload;
   } catch (error) {
     return next(new LoginError(error.message)); // отправляем кастомную ошибку авторизации
