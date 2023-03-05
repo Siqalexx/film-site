@@ -2,22 +2,20 @@ require('dotenv').config();
 
 const express = require('express');
 const mongoose = require('mongoose');
+const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const userRouter = require('./routes/user');
-const movieRouter = require('./routes/movie');
-const { auth } = require('./middlewares/auth');
 const { cors } = require('./middlewares/cors');
 const NotFound = require('./error/NotFound');
-const { login, registration, logout } = require('./controlers/user');
-const { signInCelebrate, signUpCelebrate } = require('./utils/celebrate');
 const { centralHendler } = require('./utils/centralHandler');
+const { ADRESS_ERROR, START_SERVER } = require('./constants/constants');
+const { PORT, MONGO_URL } = require('./utils/configure');
+const limiter = require('./utils/rateLimiter');
+const router = require('./routes/index');
 
 mongoose.connect(
-  process.env.NODE_ENV === 'production'
-    ? process.env.MONGO_URL
-    : 'mongodb://localhost:27017/bitfilmsdb'
+  process.env.NODE_ENV === 'production' ? process.env.MONGO_URL : MONGO_URL,
 );
 
 const app = express();
@@ -25,20 +23,14 @@ const app = express();
 app.use(cors);
 app.use(express.json());
 app.use(cookieParser());
+app.use(helmet());
+app.use(limiter);
 app.use(requestLogger);
 
-app.post('/signin', signInCelebrate(), login);
-
-app.post('/signup', signUpCelebrate(), registration);
-
-app.get('/signout', logout);
-
-app.use('/users', auth, userRouter);
-
-app.use('/movies', auth, movieRouter);
+app.use(router);
 
 app.use((req, res, next) => {
-  next(new NotFound('Неправильный адрес'));
+  next(new NotFound(ADRESS_ERROR));
 });
 
 app.use(errorLogger);
@@ -48,6 +40,6 @@ app.use(errors());
 app.use(centralHendler);
 
 app.listen(
-  process.env.NODE_ENV === 'production' ? process.env.PORT : 3000,
-  () => console.log('Сервер запущен')
+  process.env.NODE_ENV === 'production' ? process.env.PORT : PORT,
+  () => console.log(START_SERVER),
 );

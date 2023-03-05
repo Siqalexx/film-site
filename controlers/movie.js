@@ -1,4 +1,4 @@
-const { CREATE_OBJECT } = require('../constants/constants');
+const { CREATE_OBJECT, NOTFOUND_CARD, NOTYOUR_CARD } = require('../constants/constants');
 const NotFound = require('../error/NotFound');
 const ValidationError = require('../error/ValidationError');
 const Forbidden = require('../error/Forbidden');
@@ -63,10 +63,10 @@ const deleteMovie = (req, res, next) => {
     .findOne({ _id })
     .then((movie) => {
       if (!movie) {
-        throw new NotFound('Карточка не найдена');
+        throw new NotFound(NOTFOUND_CARD);
       }
       if (movie.owner.toString() !== req.user.id) {
-        throw new Forbidden('Карточка не принадлежит вам');
+        throw new Forbidden(NOTYOUR_CARD);
       }
       movie
         .remove()

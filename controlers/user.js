@@ -6,8 +6,11 @@ const NotFound = require('../error/NotFound');
 const { userModel } = require('../models/user');
 const LoginError = require('../error/LoginError');
 const Conflict = require('../error/Conflict');
+const {
+  NOTFOUND_USER, UNCORRECT_DATA, DOWNLOAD_COOKIE, LOGOUT,
+} = require('../constants/constants');
+const { JWT_SECRET, SECRET_SAUL } = require('../utils/configure');
 
-const SECRET_SAUL = 10;
 const PRIVATE_KEY = process.env.JWT_SECRET;
 
 const getUser = (req, res, next) => {
@@ -35,7 +38,7 @@ const changeUser = (req, res, next) => {
     )
     .then((user) => {
       if (!user) {
-        throw new NotFound('Пользователь не найден');
+        throw new NotFound(NOTFOUND_USER);
       }
       res.send(user);
     })
@@ -56,17 +59,17 @@ const login = (req, res, next) => {
     .select('+password')
     .then((data) => {
       if (data == null) {
-        throw new LoginError('email or password is not correct');
+        throw new LoginError(UNCORRECT_DATA);
       }
       bcrypt
         .compare(password, data.password)
         .then((result) => {
           if (!result) {
-            throw new LoginError('email or password is not correct');
+            throw new LoginError(UNCORRECT_DATA);
           }
           const token = jwt.sign(
             { id: data._id },
-            process.env.NODE_ENV === 'production' ? PRIVATE_KEY : 'dev-secret',
+            process.env.NODE_ENV === 'production' ? PRIVATE_KEY : JWT_SECRET,
             {
               expiresIn: '7d',
             },
@@ -78,7 +81,7 @@ const login = (req, res, next) => {
               // secure: true,
               // sameSite: 'None',
             })
-            .send({ message: 'cookie is download' });
+            .send({ message: DOWNLOAD_COOKIE });
         })
         .catch(next);
     })
@@ -87,7 +90,6 @@ const login = (req, res, next) => {
 
 const registration = (req, res, next) => {
   const { name, email, password } = req.body;
-  console.log(name, email, password);
   bcrypt
     .hash(password, SECRET_SAUL)
     .then((passwordHash) => {
@@ -118,7 +120,7 @@ const registration = (req, res, next) => {
 const logout = (req, res, next) => {
   try {
     res.cookie('jwt', 'none', { maxAge: 0, httpOnly: true });
-    return res.json({ message: 'User logged out successfully' });
+    return res.json({ message: LOGOUT });
   } catch (error) {
     return next(error);
   }
