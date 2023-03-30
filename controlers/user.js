@@ -78,8 +78,8 @@ const login = (req, res, next) => {
             .cookie('jwt', token, {
               maxAge: 3600000,
               httpOnly: true,
-              // secure: true,
-              // sameSite: 'None',
+              secure: true,
+              sameSite: 'None',
             })
             .send({ message: DOWNLOAD_COOKIE });
         })
