@@ -7,7 +7,10 @@ const { userModel } = require('../models/user');
 const LoginError = require('../error/LoginError');
 const Conflict = require('../error/Conflict');
 const {
-  NOTFOUND_USER, UNCORRECT_DATA, DOWNLOAD_COOKIE, LOGOUT,
+  NOTFOUND_USER,
+  UNCORRECT_DATA,
+  DOWNLOAD_COOKIE,
+  LOGOUT,
 } = require('../constants/constants');
 const { JWT_SECRET, SECRET_SAUL } = require('../utils/configure');
 

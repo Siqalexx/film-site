@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
+// const validator = require('validator');
+const { REGEPX_EMAIL } = require('../constants/constants');
 
 function validateEmail(email) {
-  return validator.isEmail(email);
+  return REGEPX_EMAIL.test(email);
 }
 
 const userSchema = mongoose.Schema({

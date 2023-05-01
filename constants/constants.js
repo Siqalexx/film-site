@@ -18,6 +18,7 @@ const LOGOUT = 'User logged out successfully';
 const NEED_AUTORIZ = 'Необходима авторизация';
 const SERVER_ERROR = 'Ошибка сервера';
 const REGEPX_URL = /https?:\/\/[www.]?[a-z1-9\-*.*_*~*:*/*?*#*[*\]*@*!*$*&*'*(*)***+*,*;*=*]+\.[a-z]+[a-z1-9\-*.*_*~*:*/*?*#*[*\]*@*!*$*&*'*(*)***+*,*;*=*]*/im;
+const REGEPX_EMAIL = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
 module.exports = {
   OK,
   VALIDERR,
@@ -39,4 +40,5 @@ module.exports = {
   LOGOUT,
   NEED_AUTORIZ,
   SERVER_ERROR,
+  REGEPX_EMAIL,
 };

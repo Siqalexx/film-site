@@ -1,5 +1,5 @@
 const { celebrate, Joi } = require('celebrate');
-const { REGEPX_URL } = require('../constants/constants');
+const { REGEPX_URL, REGEPX_EMAIL } = require('../constants/constants');
 
 const setMovieCelebrate = () => celebrate({
   body: Joi.object().keys({
@@ -24,21 +24,21 @@ const deleteMovieCelebration = () => celebrate({
 });
 const signInCelebrate = () => celebrate({
   body: Joi.object().keys({
-    email: Joi.string().required().email(),
+    email: Joi.string().required().regex(REGEPX_EMAIL),
     password: Joi.string().required(),
   }),
 });
 const signUpCelebrate = () => celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    email: Joi.string().required().email(),
+    email: Joi.string().required().regex(REGEPX_EMAIL),
     password: Joi.string().required(),
   }),
 });
 const changeUserCelebrate = () => celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    email: Joi.string().required().email(),
+    email: Joi.string().required().regex(REGEPX_EMAIL),
   }),
 });
 module.exports = {
